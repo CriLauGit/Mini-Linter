@@ -97,3 +97,8 @@ let secondMaxIndex = findMax(numTimesWordsCopy);
 let wordListCopy = wordList.slice();
 wordListCopy.splice(maxIndex,1);
 console.log("The second most used word is " + '"' + wordListCopy[secondMaxIndex] + '".');
+
+//replace "really"
+var regex = /really/g
+let newStory = story.replace(regex, 'quite');
+console.log(newStory);
