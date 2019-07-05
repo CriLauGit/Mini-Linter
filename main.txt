@@ -1,0 +1,99 @@
+let story = 'Last weekend, I took literally the most beautiful bike ride of my life. The route is called "The 9W to Nyack" and it actually stretches all the way from Riverside Park in Manhattan to South Nyack, New Jersey. It\'s really an adventure from beginning to end! It is a 48 mile loop and it basically took me an entire day. I stopped at Riverbank State Park to take some extremely artsy photos. It was a short stop, though, because I had a really long way left to go. After a quick photo op at the very popular Little Red Lighthouse, I began my trek across the George Washington Bridge into New Jersey.  The GW is actually very long - 4,760 feet! I was already very tired by the time I got to the other side.  An hour later, I reached Greenbrook Nature Sanctuary, an extremely beautiful park along the coast of the Hudson.  Something that was very surprising to me was that near the end of the route you actually cross back into New York! At this point, you are very close to the end.';
+
+let overusedWords = ['really', 'very', 'basically'];
+
+let unnecessaryWords = ['extremely', 'literally', 'actually' ];
+
+//split the text into an array of words plus punctuation
+const storyWords = story.split(' '||'.'||'!'||','||'-');
+console.log("The word count of teh story is " + storyWords.length);
+
+//new word list without the unnecessary words
+const betterWords = storyWords.filter(word => {if(unnecessaryWords.includes(word)===false){
+  return word;
+};});
+//console.log(betterWords.length);
+
+//funtion to find how many times a word is in an array
+const howManyTimes = (array, word) => {
+  let num = 0;
+  for (let i=0; i<array.length; i++) {
+    if (array[i]===word) {
+      num++;
+    }
+  }
+  return num;
+}
+
+//function to display the number of times an overused word was used
+function numberOfOverusedWords (overusedWords, story) {
+  for (let i=0; i<overusedWords.length; i++){
+    let numTimes = howManyTimes(story, overusedWords[i]);
+    console.log('The word: ' + overusedWords[i] + ' was used ' + numTimes + ' times.')
+  }
+}  
+
+numberOfOverusedWords(overusedWords, storyWords);
+
+//how many sentences the text contains
+const howManySentences = array => {
+  let numSentences = 0;
+  array.forEach(word => {
+    if(word[word.length - 1] === '.' || word[word.length - 1] === '!') {
+      numSentences ++;
+    }
+  })
+  return numSentences;
+}
+
+console.log("The text contains " + howManySentences(storyWords) + " sentences.");
+
+//new array with no overused words
+const noOverused = betterWords.filter(word => {return !overusedWords.includes(word);});
+//console.log(noOverused);
+
+//find the list of words in the text
+let wordList = [];
+let findWordList = storyWords.forEach(word => {
+  if(!wordList.includes(word)) {
+    wordList.push(word);
+  }
+}
+)
+console.log("The text contains " + wordList.length + " words.");
+
+//how many times each word is used
+function wordCount (wordList, story) {
+  let numTimes = [];
+  for (i=0; i<wordList.length; i++) {
+    numTimes[i] = howManyTimes(story, wordList[i]);
+  }
+return numTimes;  
+}
+
+let numTimesWords = wordCount(wordList, storyWords);
+//console.log(numTimesWords);
+
+//helper function to find index of max value in an array of numbers 
+function findMax(array) {
+  let max = 0, index = -1;
+  for (let i=0; i<array.length; i++) {
+    if (array[i] > max) {
+      max = array[i];
+      index = i;
+    }
+  }
+  return index;
+}
+
+let maxIndex = findMax(numTimesWords);
+//console.log(maxIndex);
+console.log("The most used word is " + '"' + wordList[maxIndex] + '".');
+
+//find second most used word
+let numTimesWordsCopy = numTimesWords.slice();
+numTimesWordsCopy.splice(maxIndex,1);
+let secondMaxIndex = findMax(numTimesWordsCopy);
+let wordListCopy = wordList.slice();
+wordListCopy.splice(maxIndex,1);
+console.log("The second most used word is " + '"' + wordListCopy[secondMaxIndex] + '".');
