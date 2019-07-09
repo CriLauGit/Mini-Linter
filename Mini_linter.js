@@ -4,15 +4,11 @@ let overusedWords = ['really', 'very', 'basically'];
 
 let unnecessaryWords = ['extremely', 'literally', 'actually' ];
 
-let wordList=[]; /*list of words in the text, with no duplicates*/
-/**
-* @description
-* Splits the story into an array of words 
-* includimg the nearby punctuation signs
-* @param {string} story
-* @return {array}
-*/
+// Splits the story into an array of words includimg the nearby punctuation signs
 const storyWords = story.split(' '||'.'||'!'||','||'-');
+
+//a list of words in the text, with no duplicates
+let wordList=removeDuplicates(storyWords); 
 
 /**
 * @description
@@ -76,13 +72,16 @@ const noOverused = betterWords.filter(word => !overusedWords.includes(word));
 
 /**
 * @description
-* Returns an array of words used in the text  
-* without duplicates
-* @param {array} storyWords
+* Removes duplicates from an array
+* @param {array} 
 * @return {array} 
 */
-let findWordList = storyWords.forEach(word => 
-  !wordList.includes(word) && wordList.push(word));
+function removeDuplicates (array) {
+  let noDuplicates = [];
+  array.forEach(item => 
+  !noDuplicates.includes(item) && noDuplicates.push(item));
+  return noDuplicates;
+}
 
 /**
 * @description
@@ -96,6 +95,43 @@ let numTimesWords = (wordList, storyWords) => {
   let numTimes = [];
   wordList.forEach((word, index) => numTimes[index] = howManyTimes(storyWords, wordList[index]))
   return numTimes;  
+}
+
+/**
+* @description
+* Finds and ranks the number of 
+* occurences of the words used in the text.
+* Displays to the console the words that are 
+* most/second/etc most used by finding the
+* indexes of the words in the wordList 
+* corresponding to the number of occurences in 
+* the wordList
+* @param {array} storyWords
+* @param {number} position
+*/
+function findMostUsed (storyWords, rank) {
+  let indexesOfWordInWordList = [], index =0, currentIndex = 0;
+  let noOccurencesOfWordInWordList = numTimesWords(wordList, storyWords);
+
+  let noOccurencesForEachWordInRank = removeDuplicates(noOccurencesOfWordInWordList).sort((a, b) => b-a);
+  if (rank > noOccurencesForEachWordInRank.length) {
+    console.log("The position must be between 1 and " + noOccurencesForEachWordInRank.length);
+  }
+  else {
+  let numberOfOccurences = noOccurencesForEachWordInRank[rank-1];
+  
+  do {
+    currentIndex=noOccurencesOfWordInWordList.indexOf(numberOfOccurences, index);
+  
+    indexesOfWordInWordList.push(currentIndex);
+    index=currentIndex+1;
+  } while (index<noOccurencesOfWordInWordList.length && noOccurencesOfWordInWordList.indexOf(numberOfOccurences, index)!==-1); 
+  
+  }
+  
+  //display the results to the console
+  console.log(rank===1? `The most used word/words in the story is/are: ` : rank===2? `The second most used word/words in the story is/are: ` : rank===3? `The third most used word/words in the story is/are: ` : `The ${rank}th most used word/words in the story is/are: `);
+  for(let i=0; i<=indexesOfWordInWordList.length-1; i++) {console.log(wordList[indexesOfWordInWordList[i]]);}
 }
 
 /**
@@ -136,11 +172,13 @@ function findSecondMax (wordList, storyWords) {
 * @param {string} wordToBeReplaced, wordToReplace
 * @param {array} storyWords
 * @return {string} 
-*/
+
 function replaceWord (wordToBeReplaced, wordToReplace, storyWords) {
   let newStory = [];
 storyWords.forEach((word,i) => word === wordToBeReplaced ? newStory[i] = wordToReplace : newStory[i] = word)  
 return newStory.join(" ");}
+*/
+const storyWithReplacedWord = ((wordToBeReplaced, wordToReplace, storyWords) => storyWords.map(word => word === wordToBeReplaced ? wordToReplace :  word).join(' '));
 
 /**
 * @description
@@ -156,6 +194,7 @@ function displayResults() {
   console.log("The text contains " + wordList.length + " words.");
   console.log("The most used word is " + '"' + wordList[findMax(numTimesWords(wordList, storyWords))] + '".');
   console.log("The second most used word is " + '"' + findSecondMax(wordList, storyWords) + '".');
-  console.log("The story with the word 'really' replaced with 'quite': " + replaceWord('really', 'quite', storyWords));}
+  console.log("The story with the word 'really' replaced with 'quite': " + storyWithReplacedWord('really', 'quite', storyWords));}
+  findMostUsed(storyWords, 5);
 }
 displayResults();
